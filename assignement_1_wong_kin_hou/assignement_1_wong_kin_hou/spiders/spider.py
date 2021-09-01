@@ -26,7 +26,7 @@ class HWZSpider(scrapy.Spider):
                 thread_links_array.append(thread_link)
                 
         # Iterates through pages to get to more threads
-        next_page = response.xpath('//div[has-class("pageNav")]/a[@class="pageNav-jump pageNav-jump--next"]/@href').get()
+        next_page = response.xpath('//div[has-class("pageNav")]/a[has-class("pageNav-jump pageNav-jump--next")]/@href').get()
         if next_page is not None:
             yield response.follow(next_page, self.parse)
         else:
@@ -42,12 +42,11 @@ class HWZSpider(scrapy.Spider):
         thread_title = response.xpath('//h1[has-class("p-title-value")]/text()').get()
 
         thread_title = response.xpath('//h1[has-class("p-title-value")]/text()').get()
-        print("***********************************" + thread_title + "***********************************")
+        print("*********************************** " + thread_title + " ***********************************")
         for post in response.xpath('//div[has-class("message-inner")]'):
-            name = post.xpath('div/section/div[@class="message-userDetails"]/h4/a/text()').get()
-            content_raw = post.xpath('div[@class="message-cell message-cell--main"]/div/div/div[has-class("message-userContent")]/article[has-class("message-body")]/div[@class="bbWrapper"]/text()').extract()
+            name = post.xpath('div/section/div[has-class("message-userDetails")]/h4/a/text()').get()
+            content_raw = post.xpath('div[has-class("message-cell message-cell--main")]/div/div/div[has-class("message-userContent")]/article[has-class("message-body")]/div[has-class("bbWrapper")]/text()').extract()
             content = ' '.join([str(item) for item in content_raw])
-            # content = "".join(post.xpath('div[@class="message-cell message-cell--main"]/div/div/div[has-class("message-userContent")]/article[has-class("message-body")]/div[@class="bbWrapper"]/text()').extract())
             # print("Title: " + str(thread_title))
             # print("Name: " + str(name))
             # print("Content: " + str(content))
@@ -57,7 +56,7 @@ class HWZSpider(scrapy.Spider):
             'name':name,
             'content':content
             }
-        # next_page = response.xpath('//div[has-class("block-outer-main")]/nav/div[has-class("pageNav  pageNav--skipEnd")]/a[@class="pageNav-jump pageNav-jump--next"]/@href').get()
+            
         next_page = response.xpath('//a[has-class("pageNav-jump pageNav-jump--next")]/@href').get()
 
         # print("Next Page: " + str(next_page))
